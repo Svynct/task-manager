@@ -1,0 +1,137 @@
+<div *ngIf="usuarioSelecionado">
+  <div class='row'>
+    <div class='mr-auto'>
+      <app-titulo [titulo]="'Usuário: ' + usuarioSelecionado.nome"></app-titulo>
+    </div>
+  </div>
+  <form [formGroup]="usuarioForm" (submit)='usuarioSubmit()'>
+    <div class='form-group mt-2'>
+      <label for='usuarioInput'>Nome</label>
+      <input type='text' value={{usuarioSelecionado.nome}} class='form-control mt-2' style="width: 400px;"
+        formControlName="nome">
+    </div>
+    <div class='form-group mt-2'>
+      <label for='usuarioInput1'>Email</label>
+      <input type='text' value={{usuarioSelecionado.email}} class='form-control mt-2' style="width: 400px;"
+        formControlName="email">
+    </div>
+    <label for="permissaoOptions" class="form-label mt-2">Permissão</label>
+    <select class="form-select" style="width: 400px;" name="permissao" value={{usuarioSelecionado.permissao}}
+      id="permissaoOptions" formControlName="permissao">
+      <option value="Usuário">Usuário</option>
+      <option value="Administrador">Administrador</option>
+    </select>
+    <div class="row g-3 align-items-center mt-2">
+      <div class="col-auto">
+        <label for="inputPassword6" class="col-form-label">Senha</label>
+      </div>
+      <div class="col-auto">
+        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"
+          formControlName="senha">
+      </div>
+      <div class="col-auto">
+        <span id="passwordHelpInline" class="form-text">
+          Precisa ter entre 8 e 20 caracteres.
+        </span>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-4" [disabled]='!usuarioForm.valid'>Salvar</button>
+    <button class='btn btn-secondary mt-4 ms-2' (click)='voltar()'>Voltar</button>
+  </form>
+  <div *ngIf='usuarioCadastrado' class="alert alert-success d-flex align-items-center mt-2" style="width: 20%;"
+    role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+      <use xlink:href="#check-circle-fill" />
+    </svg>
+    <div>
+      Usuário salvo com sucesso
+    </div>
+  </div>
+</div>
+<div *ngIf="!usuarioSelecionado">
+  <app-titulo [titulo]="titulo"></app-titulo>
+  <table class="table table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th scope='col'>Nome</th>
+        <th scope='col'>Email</th>
+        <th scope='col'>Permissão</th>
+        <th scope='col'>Opções</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor='let usuario of usuarios'>
+        <th scope='row'>{{usuario.nome}}</th>
+        <th scope='row'>{{usuario.email}}</th>
+        <th scope='row'>{{usuario.permissao}}</th>
+        <td>
+          <div class="btn-group">
+            <button type="button" class="btn btn-outline-success btn-sm m-1"
+              (click)='selecionarUsuario(usuario)'>Editar</button>
+            <button type="button" class="btn btn-outline-danger btn-sm m-1"
+              (click)='openDeleteModal(deleteModal, usuario)'>Remover</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <button (click)='openModal(template)' type="button" class="btn btn-outline-primary m-1">Novo Usuario</button>
+    <button [routerLink]="['/dashboard']" type="button" class="btn btn-outline-secondary m-1">Retornar</button>
+  </div>
+</div>
+
+<ng-template #template>
+  <div class="modal-head mt-4 ms-3">
+    <h3>Inserir novo usuário</h3>
+  </div>
+  <div class="modal-body m-2">
+    <form [formGroup]="novoUsuarioForm">
+      <input class="text-md-left mt-2" style="width: 420px" placeholder="Nome" formControlName="nome">
+      <input class="text-md-left mt-2" style="width: 420px" placeholder="Email" formControlName="email">
+      <input type="password" id="inputPassword1" class="text-md-left mt-2" aria-describedby="passwordHelpInline"
+        style="width: 420px" placeholder="Senha" formControlName="senha">
+      <select class="text-select mt-2" style="width: 220px;" name="permissao" placeholder="Permissão"
+        id="inputPermissao" formControlName="permissao">
+        <option value="Usuário">Usuário</option>
+        <option value="Administrador">Administrador</option>
+      </select>
+      <div class="modal-footer">
+        <button (click)='novoUsuarioSubmit()' type="submit" class="btn btn-outline-primary pull-right"
+          (click)='modalRef.hide()' [disabled]='!novoUsuarioForm.valid'>Salvar</button>
+        <button type="dismiss" class="btn btn-outline-secondary pull-right" (click)='modalRef.hide()'
+          data-bs-dismiss="modal" aria-label="Close">Fechar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #deleteModal>
+  <div class="modal-head mt-4 ms-3">
+    <h3>Remover Usuário</h3>
+  </div>
+  <div class="modal-body m-2">
+    Tem certeza que deseja remover o usuário?
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger pull-right" (click)='deletarUsuario(usuarioRemovido)'
+      (click)='modalRef.hide()'>Remover</button>
+    <button class="btn btn-outline-secondary pull-right" aria-label="Close" (click)='modalRef.hide()'>Fechar</button>
+  </div>
+</ng-template>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path
+      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+  </symbol>
+  <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path
+      d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+  </symbol>
+  <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path
+      d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+  </symbol>
+</svg>

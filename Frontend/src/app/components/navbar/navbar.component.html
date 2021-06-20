@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a routerLink="dashboard" class="navbar-brand">Task Manager</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav me-auto">
+        <li *ngIf='usuarioLogado' class="nav-item" routerLinkActive='active'>
+          <a routerLink="gerenciador" class="nav-link">Gerenciador de Tarefas</a>
+        </li>
+        <li *ngIf='admLogado' class="nav-item" routerLinkActive='active'>
+          <a routerLink="usuarios" class="nav-link">Usuarios</a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf='usuarioLogado' class="dropdown">
+      <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        Usuário
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="width: 75%;">
+        <li><a (click)="refresh()" routerLink="login" class="dropdown-item">Sair</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

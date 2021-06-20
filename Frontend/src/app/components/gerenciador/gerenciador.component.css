@@ -1,0 +1,8 @@
+.linhaTarefa {
+  text-decoration: line-through;
+  background-color: rgb(244, 247, 208);
+}
+
+.linhaTarefaToDo {
+  background-color: rgb(240, 198, 198);
+}

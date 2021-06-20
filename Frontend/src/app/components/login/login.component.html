@@ -1,0 +1,21 @@
+<h5>Login</h5>
+
+<div class="row">
+  <label class="active" for="usuario">Usuário</label>
+  <div class="input-field col s12">
+    <input [(ngModel)]="usuario.nome" id="usuario" type="text" class="validate">
+  </div>
+</div>
+
+<div class="row mt-2">
+  <label class="active" for="senha">Senha</label>
+  <div class="input-field col s12">
+    <input [(ngModel)]="usuario.senha" id="senha" type="password" class="validate">
+  </div>
+</div>
+
+<button class="btn btn-primary btn-sm mt-2" type="submit" name="action" (click)='fazerLogin()'>Login
+</button>
+<div *ngIf='usuarioIncorreto' class="text">
+  <label style="color: red;">Usuário ou senha incorreto</label>
+</div>

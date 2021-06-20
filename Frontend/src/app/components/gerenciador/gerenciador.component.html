@@ -1,0 +1,92 @@
+<div class='row'>
+
+  <div class='col-sm-6' *ngIf="tarefaSelecionada">
+    <div class='row'>
+      <div class='me-auto'>
+        <app-titulo [titulo]="'Tarefa: ' + tarefaSelecionada.nome"></app-titulo>
+      </div>
+    </div>
+
+    <form [formGroup]="tarefaForm" (submit)='tarefaSubmit()'>
+      <div class='form-group'>
+        <label for='tarefaInput'>Tarefa</label>
+        <input type='text' formControlName="nome" class='form-control mt-2' id='formGroupTarefaInput'
+          placeholder='Insira a sua tarefa aqui...'>
+      </div>
+      <button type="submit" class="btn btn-sm btn-primary mt-4" [disabled]='!tarefaForm.valid'>Salvar</button>
+      <button class='btn btn-sm btn-secondary ms-1 mt-4' (click)="voltar()">Fechar</button>
+    </form>
+  </div>
+  <div [ngClass]="{'col-sm-6': tarefaSelecionada, 'col-sm-12': !tarefaSelecionada }">
+    <app-titulo [titulo]="titulo"></app-titulo>
+
+    <table class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope='col'>Tarefa</th>
+          <th scope='col'>Concluída</th>
+          <th scope='col'>Opções</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor='let tarefa of tarefas'>
+          <th scope='row' *ngIf='tarefa.concluida' class="linhaTarefa">{{tarefa.nome}}</th>
+          <th scope='row' *ngIf='!tarefa.concluida' class="linhaTarefaToDo">{{tarefa.nome}}</th>
+          <td scope='row'>
+            <div class="form-group">
+              <div class="col-md-3">
+                <div class="checkbox">
+                  <label class="checkbox-inline">
+                    <input type="checkbox" [(ngModel)]="tarefa.concluida">
+                    Sim
+                  </label>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <button type="button" class="btn btn-outline-success btn-sm m-1"
+              (click)='selecionarTarefa(tarefa)'>Editar</button>
+            <button type="button" class="btn btn-outline-danger btn-sm m-1"
+              (click)='openDeleteModal(deleteModal, tarefa)'>Remover</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div>
+      <button (click)='openModal(template)' type="button" class="btn btn-outline-primary m-1">Nova Tarefa</button>
+      <button [routerLink]="['/dashboard']" type="button" class="btn btn-outline-secondary m-1">Retornar</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #template>
+  <div class="modal-head mt-4 ms-3">
+    <h3>Inserir nova tarefa</h3>
+  </div>
+  <form [formGroup]="novaTarefaForm">
+    <div class="modal-body m-2">
+      <input class="text-md-left" style="width: 400px" placeholder="Descreva a sua tarefa..." formControlName="nome">
+    </div>
+    <div class="modal-footer">
+      <button (click)='novaTarefaSubmit()' class="btn btn-outline-primary pull-right"
+        (click)='modalRef.hide()'>Salvar</button>
+      <button class="btn btn-outline-secondary pull-right" aria-label="Close" (click)='modalRef.hide()'>Fechar</button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #deleteModal>
+  <div class="modal-head mt-4 ms-3">
+    <h3>Remover Tarefa</h3>
+  </div>
+  <div class="modal-body m-2">
+    Tem certeza que deseja remover a tarefa?
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger pull-right" (click)='deletarTarefa(tarefaRemovida)'
+      (click)='modalRef.hide()'>Remover</button>
+    <button class="btn btn-outline-secondary pull-right" aria-label="Close" (click)='modalRef.hide()'>Fechar</button>
+  </div>
+</ng-template>
